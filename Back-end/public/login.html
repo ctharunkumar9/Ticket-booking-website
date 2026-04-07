@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <title>Login</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: "Lucida Console", Times, serif;
+      background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("https://img.freepik.com/premium-photo/white-color-volvo-bus-ai-image_856405-1062.jpg");
+    }
+
+    .form-container {
+      width: 300px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+      background-image: linear-gradient(120deg, #e9defa 30%, #fbfcdb 100%);
+    }
+
+    h1 {
+      text-align: center;
+      font-family: caveat;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007BFF;
+      color: white;
+      border: solid dotted;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h1>Login</h1>
+    <form id="loginForm">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+
+      <button type="submit">Login</button>
+    </form>
+    <a href="signup.html">Don't have an account? Sign up</a>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent default form submission
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      // Send a POST request to the server with email and password
+      fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message === 'Login successful!') {
+          alert('Login successful! Redirecting...');
+          localStorage.setItem('loggedIn', 'true'); // Store login state
+          window.location.href = 'ticket.html'; // Redirect to home page
+        } else {
+          alert('Invalid email or password. Please try again.');
+        }
+      })
+      .catch(error => {
+        console.error('Error during login:', error);
+        alert('Something went wrong. Please try again later.');
+      });
+    });
+  </script>
+</body>
+</html>

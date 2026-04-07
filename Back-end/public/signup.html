@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <title>Sign Up</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Bree+Serif&family=Caveat:wght@400;700&family=Lobster&family=Monoton&family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700;1,700&family=Playfair+Display+SC:ital,wght@0,400;0,700;1,700&family=Playfair+Display:ital,wght@0,400;0,700;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+Pro:ital,wght@0,400;0,700;1,700&family=Work+Sans:ital,wght@0,400;0,700;1,700&display=swap");
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh; 
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-image: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url("https://img.freepik.com/premium-photo/white-color-volvo-bus-ai-image_856405-1062.jpg");
+    }
+
+    .form-container {
+      width: 300px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-image: linear-gradient(120deg, #e9defa 30%, #fbfcdb 100%);
+    }
+
+    h1 {
+      text-align: center;
+      font-family: "Lobster";
+      color: grey;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-family: "Bree Serif";
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h1>Sign Up</h1>
+    <form id="signupForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+      
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+
+      <button type="submit">Sign Up</button>
+    </form>
+    <a href="login.html">Already have an account? Login</a>
+  </div>
+
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent default form submission
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const userDetails = {
+        name: name,
+        email: email,
+        password: password
+      };
+
+      // Send the data to the server using fetch (AJAX)
+      fetch('/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userDetails)
+      })
+      .then(response => response.text())
+      .then(data => {
+        alert(data);
+        if (data === 'User registered successfully!') {
+          window.location.href = 'login.html'; // Redirect to login page on successful registration
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Registration failed. Please try again.');
+      });
+    });
+  </script>
+</body>
+</html>

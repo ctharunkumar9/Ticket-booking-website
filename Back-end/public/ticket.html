@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <title>Get Your Ticket</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f9f9f9;
+    }
+
+    .form-container {
+      width: 300px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: white;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .cost-display, .success-message, .error-message {
+      text-align: center;
+    }
+
+    .not-logged-in {
+      text-align: center;
+      color: red;
+      margin-top: 20px;
+    }
+
+    .error-message {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h1>Get Your Ticket</h1>
+    
+    <div id="notLoggedIn" class="not-logged-in" style="display: none;">You must be logged in to purchase a ticket.</div>
+
+    <form id="ticketForm" onsubmit="return false;">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+      
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      
+      <label for="from">From:</label>
+      <input type="text" id="from" name="from" required>
+      
+      <label for="destination">Destination:</label>
+      <input type="text" id="destination" name="destination" required>
+      
+      <label for="date">Travel Date:</label>
+      <input type="date" id="date" name="date" required>
+      
+      <label for="distance">Distance (in km):</label>
+      <input type="number" id="distance" name="distance" required min="1" placeholder="Enter distance in km">
+      
+      <label for="ageGroup">Age Group:</label>
+      <select id="ageGroup" name="ageGroup" required onchange="calculateCost()">
+        <option value="">Select Age Group</option>
+        <option value="child">Child (Below 12)</option>
+        <option value="adult">Adult (12-59)</option>
+        <option value="elder">Elder (60 and Above)</option>
+      </select>
+      
+      <label for="ticketType">Ticket Type:</label>
+      <select id="ticketType" name="ticketType" required>
+        <option value="one-way">One Way</option>
+        <option value="round-trip">Round Trip</option>
+      </select>
+      
+      <button type="button" onclick="calculateCost()">Get Cost</button>
+      <div class="cost-display" id="costDisplay"></div>
+      
+      <button type="button" id="getTicketButton" onclick="handleTicketButton()">Get Ticket</button>
+    </form>
+
+    <div class="success-message" id="successMessage"></div>
+    <div class="error-message" id="errorMessage" style="display: none;"></div>
+    
+    <a href="index.html">Go back to main page</a>
+  </div>
+
+  <script>
+    const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+
+    if (!isLoggedIn) {
+      document.getElementById('ticketForm').style.display = 'none';
+      document.getElementById('notLoggedIn').style.display = 'block';
+    }
+    
+
+    function calculateCost() {
+      const ageGroup = document.getElementById('ageGroup').value;
+      const distance = parseInt(document.getElementById('distance').value) || 0;
+      let cost = 0;
+
+      if (ageGroup === 'child') {
+        cost = 50;
+      } else if (ageGroup === 'adult') {
+        cost = 100;
+      } else if (ageGroup === 'elder') {
+        cost = 80;
+      }
+
+      const distanceCostPerKm = 3;
+      const distanceCost = distance * distanceCostPerKm;
+
+      const ticketType = document.getElementById('ticketType').value;
+      if (ticketType === 'round-trip') {
+        cost = (cost + distanceCost) * 2;
+      } else {
+        cost += distanceCost;
+      }
+
+      const costDisplay = document.getElementById('costDisplay');
+      if (cost > 0) {
+        costDisplay.innerText = `Cost of the trip: ₹${cost}`;
+      } else {
+        costDisplay.innerText = '';
+      }
+
+      return cost;  // Return the calculated cost
+    }
+
+    function handleTicketButton() {
+      if (!isLoggedIn) {
+        redirectToLogin();
+      } else {
+        if (validateForm()) {
+          const cost = calculateCost();
+          handleFormSubmit(cost);
+        }
+      }
+    }
+
+    function validateForm() {
+      const errorMessage = document.getElementById('errorMessage');
+      errorMessage.style.display = 'none';
+      errorMessage.innerText = '';
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const destination = document.getElementById('destination').value;
+      const date = document.getElementById('date').value;
+      const distance = document.getElementById('distance').value;
+      const ageGroup = document.getElementById('ageGroup').value;
+      const ticketType = document.getElementById('ticketType').value;
+
+      if (!name || !email || !destination || !date || !distance || !ageGroup || !ticketType) {
+        errorMessage.innerText = 'Please fill in all fields correctly.';
+        errorMessage.style.display = 'block';
+        return false;
+      }
+
+      return true;
+    }
+
+    function redirectToLogin() {
+      window.location.href = 'login.html';
+    }
+
+    function handleFormSubmit(cost) {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const from = document.getElementById('from').value;
+      const destination = document.getElementById('destination').value;
+      const date = document.getElementById('date').value;
+      const distance = document.getElementById('distance').value;
+      const ageGroup = document.getElementById('ageGroup').value;
+      const ticketType = document.getElementById('ticketType').value;
+
+      const bookingData = {
+        name,
+        email,
+        from,
+        destination,
+        date,
+        distance,
+        ageGroup,
+        ticketType,
+        cost
+      };
+
+      // Send the form data to the server
+      fetch('/book-ticket', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bookingData),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message === 'Ticket booked successfully!') {
+          document.getElementById('successMessage').innerText = 'Ticket booked successfully!';
+          document.getElementById('ticketForm').reset();
+          document.getElementById('costDisplay').innerText = '';
+          
+          // Redirect to confirmation page
+          window.location.href = 'confirmation.html';  // Redirects to confirmation page
+        } else {
+          document.getElementById('errorMessage').innerText = 'There was an error booking the ticket. Please try again.';
+          document.getElementById('errorMessage').style.display = 'block';
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('errorMessage').innerText = 'There was an error. Please try again later.';
+        document.getElementById('errorMessage').style.display = 'block';
+      });
+    }
+  </script>
+</body>
+</html>
