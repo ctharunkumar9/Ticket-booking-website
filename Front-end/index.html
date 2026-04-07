@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <title>GRAB YOUR TICKET</title>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <h1>LUXURY VOYAGES</h1>
+    </div>
+    <div class="links">
+      <div class="link" data-aos="fade-up" data-aos-duration="1200"><a href="home.html">Home</a></div>
+      <div class="link" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="100"><a href="about.html">About us</a></div>
+      <div class="link" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="200"><a href="contact.html">Contact us</a></div>
+      <div class="link" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="300"><a href="services.html">Contact us</a></div>
+
+    </div>
+    <div class="buttons">
+      <button onclick="window.location.href='login.html'" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="400">Login</button>
+      <button onclick="window.location.href='signup.html'" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="500">Sign up</button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="content">
+      <h1 data-aos="fade-up" data-aos-duration="2000" data-aos-delay="500">Your Safe Journey is our Priority</h1>
+      <p data-aos="fade-up" data-aos-duration="2000" data-aos-delay="700">Embrace the wanderlust and let the bus take you places!</p>
+    </div>
+  </section>
+
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init();
+
+    const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+
+    if (isLoggedIn) {
+      document.getElementById('ticketButton').style.display = 'block';
+    }
+
+    function simulateLogin() {
+      localStorage.setItem('loggedIn', 'true');
+      document.getElementById('ticketButton').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
